@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Josefin Sans Regular';
+    src: url('fonts/JosefinSans-Regular.woff2') format('woff2'),
+        url('fonts/JosefinSans-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Josefin Sans Bold';
+    src: url('fonts/JosefinSans-Bold.woff2') format('woff2'),
+        url('fonts/JosefinSans-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@layer base {
+    html, 
+    * {
+        @apply font-secondary transition-all duration-150;
+    }
+
+    h1,h2,h3,h4,h5,h6 {
+        @apply font-primary;
+    }
+
+    input, button {
+        @apply outline-none;
+    }
+    .todo__check-icon {
+        @apply hidden;
+    }
+
+    .todo__checkbox:checked + .todo__label .todo__check-wrapper {
+        @apply bg-gradientBlueViolet;
+    }
+
+    .todo__checkbox:checked + .todo__label .todo__check-bg {
+        @apply bg-transparent;
+    }
+
+    .todo__checkbox:checked + .todo__label .todo__check-icon{
+        @apply block;
+    }
+
+    .todo__checkbox:checked + .todo__label .todo__title {
+        @apply line-through text-light-gray-300 dark:text-dark-gray-400;
+    }
+}
+
+
+
+
+
