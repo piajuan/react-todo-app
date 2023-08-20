@@ -1,4 +1,4 @@
-import { useState , useEffect } from 'react'
+import { useState , useEffect, useRef } from 'react'
 import { headerBannerDark, headerBannerLight, iconMoon, iconSun } from './assets'
 import NewTodoForm from './components/NewTodoForm'
 import TodoList from './containers/TodoList'
@@ -73,6 +73,37 @@ export default function App() {
     })
   }
 
+  /* ~~~~~ handle sort via drag ~~~~~ */
+  // save ref for dragIems and dragOveritem
+  const dragItem = useRef(null)
+  const dragOverItem = useRef(null)
+
+  function handleDragStart (e,index) {
+    dragItem.current = index;
+  }
+
+  function handleDragEnter (e, index) {
+    dragOverItem.current = index;
+  }
+
+  function handleSort () {
+    // duplicate items
+    const _todoItems = [...todoItems]
+
+    // remove and save the dragged item
+    const draggedItemContent = _todoItems.splice(dragItem.current, 1)[0]
+
+    // switch the position
+    _todoItems.splice(dragOverItem.current, 0, draggedItemContent)
+
+    // reset the ref values
+    dragItem.current = null
+    dragOverItem.current = null
+
+    // update the array
+    setTodoItems(prev => _todoItems)
+  }
+
   return (
     <div className={darkMode ? 'dark' : ''}>
       <main className="min-h-screen p-5 bg-no-repeat bg-top bg-[#fafafa] dark:bg-dark-gray-700" style={{backgroundImage: darkMode ? `url(${headerBannerDark})` : `url(${headerBannerLight})`, backgroundSize: '100% 30vh'}}>
@@ -85,7 +116,15 @@ export default function App() {
               <NewTodoForm itemName={newTodo} onChange={handleChange} onKeyDown={handleKeyDown}/>
 
               <div className='bg-light-gray-100 shadow-light dark:shadow-dark dark:bg-dark-gray-600 overflow-hidden rounded-md'>
-                <TodoList itemsList={todoItems} toggleTodo={toggleTodo} deleteTodo={deleteTodo} selectedFilter={selectedFilter}/>
+                <TodoList 
+                  itemsList={todoItems} 
+                  toggleTodo={toggleTodo} 
+                  deleteTodo={deleteTodo} 
+                  selectedFilter={selectedFilter} 
+                  onDragStart={handleDragStart}
+                  onDragEnter={handleDragEnter}
+                  onDragEnd={handleSort}
+                  />
                 <ActionBar itemsLeft={itemsLeft} clearCompleted={clearCompleted} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
               </div>
 
@@ -97,7 +136,6 @@ export default function App() {
           </section>
         </main>
     </div>
-    
   )
 }
 
